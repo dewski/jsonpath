@@ -86,11 +86,11 @@ func (r *Reader) walk(v reflect.Value, path string) {
 	case reflect.Invalid:
 		// nil value
 	default:
-		r.buildPath(path, fmt.Sprintf("%v", v))
+		r.buildPath(path, v.Interface())
 	}
 }
 
-func (r *Reader) buildPath(path, value string) {
+func (r *Reader) buildPath(path string, value interface{}) {
 	// Key is the path to the JSON property we're indexing.
 	v := fmt.Sprintf("%s%s", Delimiter, path)
 
@@ -114,7 +114,7 @@ func escapeKey(key string) string {
 
 	if escape {
 		return fmt.Sprintf("\"%s\"", key)
-	} else {
-		return key
 	}
+
+	return key
 }

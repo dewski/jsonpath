@@ -1,6 +1,7 @@
 package jsonpath
 
 import (
+	"reflect"
 	"sort"
 	"testing"
 
@@ -66,4 +67,14 @@ func TestPathWithSpaces(t *testing.T) {
 	assert.Equal(t, "user.login", jp.Path(`."event type"`))
 	assert.Equal(t, "My issue", jp.Path(`."some issues"."issue title"`))
 	assert.Equal(t, "dewski", jp.Path(`."all my users"[0]."user name"`))
+}
+
+type custom string
+
+func TestPathPreservesOriginalType(t *testing.T) {
+	jp := NewReader(map[string]interface{}{
+		"action": custom("user.login"),
+	})
+
+	assert.Equal(t, "jsonpath.custom", reflect.TypeOf(jp.Path(`.action`)).String())
 }
